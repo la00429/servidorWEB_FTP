@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web-ftp-server:
+    build: .
+    container_name: ubuntu-nginx-ftp
+    ports:
+      # Puerto HTTP para nginx
+      - "80:80"
+      # Puerto FTP control
+      - "21:21"
+      # Puerto FTP data
+      - "20:20"
+      # Rango de puertos para FTP pasivo
+      - "21100-21110:21100-21110"
+    volumes:
+      # Montar directorio local para archivos web (persistente)
+      - ./www:/var/www/html
+      # Montar directorio para archivos FTP (persistente)
+      - ./ftp-data:/home/ftpuser
+      # Montar logs específicos para debugging (persistente)
+      - ./logs/nginx:/var/log/nginx
+      - ./logs/supervisor:/var/log/supervisor
+      - ./logs/vsftpd:/var/log/vsftpd
+    environment:
+      - FTP_USER=ftpuser
+      - FTP_PASS=ftppass123
+    restart: unless-stopped
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge

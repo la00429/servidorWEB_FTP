@@ -1,0 +1,17 @@
+¡Bienvenido al servidor FTP!
+
+Este es un archivo de ejemplo en el directorio FTP.
+
+Información de conexión:
+- Usuario: ftpuser
+- Contraseña: ftppass123
+- Puerto: 21
+
+Puedes subir y descargar archivos usando cualquier cliente FTP como:
+- FileZilla
+- WinSCP
+- Línea de comandos FTP
+
+¡Tu servidor está funcionando correctamente!
+
+Fecha de creación: $(date)
