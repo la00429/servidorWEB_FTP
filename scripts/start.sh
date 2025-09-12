@@ -2,6 +2,12 @@
 
 echo "=== Iniciando servidor web con FTP ==="
 
+# Ejecutar configuración de red si existe
+if [ -f /scripts/configure-network.sh ]; then
+    echo "Configurando red para DHCP/DNS..."
+    source /scripts/configure-network.sh
+fi
+
 # Crear lista de usuarios FTP permitidos
 echo "ftpuser" > /etc/vsftpd.userlist
 

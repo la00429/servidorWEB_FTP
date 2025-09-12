@@ -31,12 +31,13 @@ COPY configs/default /etc/nginx/sites-available/default
 COPY configs/vsftpd.conf /etc/vsftpd.conf
 COPY configs/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY scripts/start.sh /start.sh
+COPY scripts/configure-network.sh /scripts/configure-network.sh
 
 # Copiar página web de ejemplo
 COPY www/ /var/www/html/
 
-# Dar permisos de ejecución al script de inicio
-RUN chmod +x /start.sh
+# Dar permisos de ejecución a los scripts
+RUN chmod +x /start.sh /scripts/configure-network.sh
 
 # Exponer puertos
 # 80: HTTP (nginx)

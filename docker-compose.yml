@@ -4,6 +4,8 @@ services:
   web-ftp-server:
     build: .
     container_name: ubuntu-nginx-ftp
+    hostname: webserver-ftp  # Nombre del host para DNS
+    domainname: local        # Dominio por defecto (cambiar según tu red)
     ports:
       # Puerto HTTP para nginx
       - "80:80"
@@ -25,10 +27,35 @@ services:
     environment:
       - FTP_USER=ftpuser
       - FTP_PASS=ftppass123
+      # Variables para configuración de red
+      - HOSTNAME=webserver-ftp
+      - DOMAIN=local
+    # Configuración de DNS personalizada
+    dns:
+      - 8.8.8.8          # DNS primario (cambiar por tu DNS server)
+      - 8.8.4.4          # DNS secundario (cambiar por tu DNS server)
+    # Opciones adicionales de DNS
+    dns_search:
+      - local            # Dominio de búsqueda (cambiar según tu red)
+    # Configuración de red avanzada
+    extra_hosts:
+      - "dns-server:192.168.1.100"    # IP de tu servidor DNS (cambiar)
+      - "dhcp-server:192.168.1.101"   # IP de tu servidor DHCP (cambiar)
     restart: unless-stopped
     networks:
-      - webnet
+      webnet:
+        # IP fija opcional (descomenta si necesitas IP estática)
+        # ipv4_address: 172.20.0.10
 
 networks:
   webnet:
     driver: bridge
+    # Configuración de red personalizada para integración DHCP/DNS
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+    # Opciones adicionales para el driver bridge
+    driver_opts:
+      com.docker.network.bridge.name: webnet-bridge
+      com.docker.network.bridge.enable_ip_masquerade: "true"
