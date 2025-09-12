@@ -18,7 +18,9 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir -p /var/log/supervisor \
     && mkdir -p /var/run/sshd \
     && mkdir -p /home/ftpuser \
-    && mkdir -p /var/www/html
+    && mkdir -p /var/www/html \
+    && mkdir -p /var/run/vsftpd/empty \
+    && chmod 755 /var/run/vsftpd/empty
 
 # Crear usuario para FTP
 RUN useradd -m -d /home/ftpuser -s /bin/bash ftpuser \
