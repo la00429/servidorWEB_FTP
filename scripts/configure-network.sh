@@ -14,10 +14,14 @@ configure_dns() {
     # Configurar DNS servers
     if [ ! -z "$DNS_PRIMARY" ]; then
         echo "nameserver $DNS_PRIMARY" > /etc/resolv.conf
+    else
+        echo "nameserver 192.168.1.2" > /etc/resolv.conf
     fi
     
     if [ ! -z "$DNS_SECONDARY" ]; then
         echo "nameserver $DNS_SECONDARY" >> /etc/resolv.conf
+    else
+        echo "nameserver 8.8.8.8" >> /etc/resolv.conf
     fi
     
     # Configurar dominio de búsqueda
@@ -52,16 +56,21 @@ configure_hostname() {
 configure_vsftpd_ip() {
     echo "Configurando vsftpd para red externa..."
     
-    # Obtener IP del contenedor/host
-    if [ "$NETWORK_MODE" = "host" ]; then
-        # En modo host, usar IP de la interfaz principal
-        CONTAINER_IP=$(ip route get 8.8.8.8 | awk '{print $7; exit}')
+    # Priorizar IP objetivo del servidor
+    if [ ! -z "$SERVER_IP" ]; then
+        CONTAINER_IP="$SERVER_IP"
+        echo "Usando IP configurada del servidor: $CONTAINER_IP"
     else
-        # En modo bridge, usar IP del contenedor
-        CONTAINER_IP=$(hostname -i | awk '{print $1}')
+        # Obtener IP del contenedor/host
+        if [ "$NETWORK_MODE" = "host" ]; then
+            # En modo host, usar IP de la interfaz principal
+            CONTAINER_IP=$(ip route get 8.8.8.8 | awk '{print $7; exit}')
+        else
+            # En modo bridge, usar IP del contenedor
+            CONTAINER_IP=$(hostname -i | awk '{print $1}')
+        fi
+        echo "IP detectada automáticamente: $CONTAINER_IP"
     fi
-    
-    echo "IP detectada: $CONTAINER_IP"
     
     # Actualizar configuración de vsftpd
     if [ ! -z "$CONTAINER_IP" ]; then
