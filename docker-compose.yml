@@ -46,7 +46,7 @@ services:
     extra_hosts:
       - "dns-server:192.168.1.2"    # IP de tu servidor DNS (cambiar)
       - "dhcp-server:192.168.1.2"   # IP de tu servidor DHCP (cambiar)
-    restart: unless-stopped
+    restart: always
     networks:
       webnet:
         # IP fija opcional (descomenta si necesitas IP estática)
