@@ -27,9 +27,9 @@
             border-radius: 15px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             padding: 3rem;
-            max-width: 800px;
+            max-width: 980px;
             margin: 2rem;
-            text-align: center;
+            text-align: left;
         }
 
         h1 {
@@ -41,7 +41,7 @@
         h2 {
             color: #667eea;
             margin: 2rem 0 1rem;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
         }
 
         .services {
@@ -127,66 +127,306 @@
             color: #718096;
             font-size: 0.9rem;
         }
+
+        /* Tabs */
+        .tabs {
+            margin-top: 1.25rem;
+        }
+        .tablist {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .tablist button {
+            background: transparent;
+            border: 0;
+            color: #4a5568;
+            padding: 0.6rem 1rem;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 200ms ease, background-color 200ms ease;
+        }
+        .tablist button[aria-selected="true"] {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+        .tab-panels {
+            position: relative;
+            overflow: hidden;
+        }
+        .tab-panel {
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 220ms ease, transform 220ms ease;
+        }
+        .tab-panel.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Content helpers */
+        .lead {
+            color: #4a5568;
+            margin-bottom: 0.75rem;
+        }
+        .table-of-contents ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .table-of-contents ul li a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            display: block;
+            padding: 0.4rem 0;
+            transition: color 0.2s ease;
+        }
+        .table-of-contents ul li a:hover { color: #5a67d8; }
+        .table-of-contents ul ul { padding-left: 20px; list-style: circle; }
+        .gantt-diagram { max-width: 100%; height: auto; display: block; margin: 1rem auto; border: 1px solid #e2e8f0; border-radius: 8px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 Servidor Web + FTP</h1>
-        <p>Servidor Ubuntu con nginx y vsftpd ejecutándose en Docker</p>
-        
+        <h1>Servidor Web + FTP</h1>
+        <p class="lead">Servidor Ubuntu con nginx y vsftpd ejecutándose en Docker</p>
+
+        <div class="tabs" id="tabs">
+            <div class="tablist" role="tablist" aria-label="Navegación de secciones">
+                <button role="tab" aria-selected="true" aria-controls="tab-informe" id="tab-informe-btn">Informe</button>
+                <button role="tab" aria-selected="false" aria-controls="tab-servicios" id="tab-servicios-btn">Servicios</button>
+                <button role="tab" aria-selected="false" aria-controls="tab-descargas" id="tab-descargas-btn">Descargas</button>
+                <button role="tab" aria-selected="false" aria-controls="tab-subir" id="tab-subir-btn">Subir archivos</button>
+            </div>
+
+            <div class="tab-panels">
+                <section id="tab-informe" class="tab-panel active" role="tabpanel" aria-labelledby="tab-informe-btn">
+                    <header>
+                        <h2>Informe ABP: Servidor DHCP, DNS y Servidor de Archivos</h2>
+                        <p style="font-size: 1rem; margin-bottom: 0.25rem;">Grupo: David Santiago Lotero Rodríguez, Luis Eduardo Hernandez Rincon, Laura Vanessa Figueredo Martínez, Juan Sebastian Joe Felipe Rodriguez Mateus</p>
+                        <p style="font-size: 1rem; margin-bottom: 0.25rem;">Docente: Ing. Frey Alfonso Santamaría Buitrago</p>
+                        <p style="font-size: 1rem;">Fecha: 2025</p>
+                    </header>
+
+                    <section id="tabla-de-contenidos" class="table-of-contents">
+                        <h3>Tabla de Contenidos</h3>
+                        <ul>
+                            <li><a href="#introduccion-contexto">1. Introducción y Contexto</a>
+                                <ul>
+                                    <li><a href="#problema-resolver">1.1. Problema a Resolver</a></li>
+                                    <li><a href="#objetivo-proyecto">1.2. Objetivo del Proyecto</a></li>
+                                    <li><a href="#alcance-proyecto">1.3. Alcance del Proyecto</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#marco-teorico">2. Marco Teórico y Conceptual</a>
+                                <ul>
+                                    <li><a href="#analisis-servicios">2.1. Análisis de los Servicios</a>
+                                        <ul>
+                                            <li><a href="#servidor-dhcp-teoria">2.1.1. Servidor DHCP</a></li>
+                                            <li><a href="#servidor-dns-teoria">2.1.2. Servidor DNS</a></li>
+                                            <li><a href="#servidor-archivos-teoria">2.1.3. Servidor de Archivos</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#planificacion">3. Planificación</a>
+                                <ul>
+                                    <li><a href="#division-tareas">3.1. División de Tareas</a></li>
+                                    <li><a href="#diagrama-gantt">3.2. Diagrama de Gantt</a></li>
+                                    <li><a href="#justificacion-os">3.3. Justificación de Sistemas Operativos</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#desarrollo-proyecto">4. Desarrollo del Proyecto</a>
+                                <ul>
+                                    <li><a href="#fase-implementacion">4.1. Fase de Implementación</a></li>
+                                    <li><a href="#fase-pruebas">4.2. Fase de Pruebas y Validación</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#resultados-conclusiones">5. Resultados y Conclusiones</a></li>
+                            <li><a href="#anexos-referencias">6. Anexos y Referencias</a></li>
+                        </ul>
+                    </section>
+
+                    <section id="introduccion-contexto">
+                        <h3>1. Introducción y Contexto</h3>
+                        <h4 id="problema-resolver">1.1. Problema a Resolver</h4>
+                        <p>El reto principal es diseñar e implementar servidores DHCP, DNS y de archivos para asegurar conectividad, resolución de nombres y transferencia de archivos en la red.</p>
+                        <h4 id="objetivo-proyecto">1.2. Objetivo del Proyecto</h4>
+                        <h5>Objetivo General</h5>
+                        <ul>
+                            <li>Diseñar, implementar y documentar una configuración completa de DNS (pfSense), DHCP (Fedora) y servidor de archivos (NGINX).</li>
+                        </ul>
+                        <h5>Objetivos Específicos</h5>
+                        <ul>
+                            <li>Comprender protocolos de red y su rol.</li>
+                            <li>Aplicar procedimientos de configuración y verificar interoperabilidad.</li>
+                            <li>Evaluar resultados y documentar el proceso.</li>
+                        </ul>
+                        <h4 id="alcance-proyecto">1.3. Alcance del Proyecto</h4>
+                        <p>Incluye análisis, diseño y configuración de DHCP, DNS y servidor de archivos; excluye servicios avanzados fuera del entorno de práctica.</p>
+                    </section>
+
+                    <section id="marco-teorico">
+                        <h3>2. Marco Teórico y Conceptual</h3>
+                        <h4 id="analisis-servicios">2.1. Análisis de los Servicios</h4>
+                        <h5 id="servidor-dhcp-teoria">2.1.1. Servidor DHCP</h5>
+                        <p>DHCP asigna parámetros de red automáticamente. Ciclo DORA: Discover, Offer, Request, Acknowledge.</p>
+                        <ul>
+                            <li>Asignación dinámica, gestión de IPs, configuración centralizada, renovación de concesión.</li>
+                        </ul>
+                        <h5 id="servidor-dns-teoria">2.1.2. Servidor DNS</h5>
+                        <p>DNS traduce dominios a direcciones IP mediante resolución recursiva y caché.</p>
+                        <ul>
+                            <li>Jerarquía, registros A/AAAA/CNAME/MX, caché, zonas de autoridad.</li>
+                        </ul>
+                        <h5 id="servidor-archivos-teoria">2.1.3. Servidor de Archivos</h5>
+                        <p>Centraliza archivos y permite subir/descargar (FTP).</p>
+                    </section>
+
+                    <section id="planificacion">
+                        <h3>3. Planificación</h3>
+                        <h4 id="division-tareas">3.1. División de Tareas</h4>
+                        <ul>
+                            <li>David Santiago Lotero Rodriguez</li>
+                            <li>Luis Eduardo Hernandez Rincón</li>
+                            <li>Laura Vanesa Figueredo</li>
+                            <li>Juan Sebastian Joe Felipe Rodriguez Mateus</li>
+                        </ul>
+                        <h4 id="diagrama-gantt">3.2. Diagrama de Gantt</h4>
+                        <div class="image-container">
+                            <img src="https://via.placeholder.com/800x400?text=Diagrama+de+Gantt+Redes" alt="Diagrama de Gantt Redes" class="gantt-diagram">
+                            <p><em>(Ejemplo: en producción usar la imagen del informe)</em></p>
+                        </div>
+                        <h4 id="justificacion-os">3.3. Justificación de Sistemas Operativos</h4>
+                        <ul>
+                            <li><strong>Fedora Server (DHCP):</strong> Innovación, seguridad y facilidad de configuración.</li>
+                            <li><strong>pfSense (DNS):</strong> Robusto, interfaz web y control granular.</li>
+                            <li><strong>Ubuntu + Docker (Archivos):</strong> Estabilidad y contenerización (NGINX, VSFTPD).</li>
+                        </ul>
+                    </section>
+
+                    <section id="desarrollo-proyecto">
+                        <h3>4. Desarrollo del Proyecto (Sección Técnica)</h3>
+                        <h4 id="fase-implementacion">4.1. Fase de Implementación</h4>
+                        <h5 id="configuracion-dhcp">4.1.1. DHCP (Fedora Server 42)</h5>
+                        <ol>
+                            <li><strong>Actualizar paquetes:</strong> <code>sudo dnf update -y</code></li>
+                            <li><strong>Instalar:</strong> <code>sudo dnf install dhcp-server radvd bind bind-utils -y</code></li>
+                            <li><strong>Configurar /etc/dhcp/dhcpd.conf</strong> con red, rango, DNS y reserva por MAC.</li>
+                            <li><strong>Definir interfaz en /etc/sysconfig/dhcpd</strong></li>
+                            <li><strong>Activar servicio:</strong> <code>sudo systemctl enable --now dhcpd</code></li>
+                            <li><strong>Firewall:</strong> <code>sudo firewall-cmd --permanent --add-service=dhcp && sudo firewall-cmd --reload</code></li>
+                        </ol>
+                        <h5 id="configuracion-dns">4.1.2. DNS (mismo servidor)</h5>
+                        <ol>
+                            <li><strong>Instalar:</strong> <code>sudo dnf install bind bind-utils -y</code></li>
+                            <li><strong>Editar /etc/named.conf</strong> y zona <code>/var/named/grupocuatro.com.zone</code></li>
+                            <li><strong>Permisos:</strong> <code>chown named:named</code>, <code>chmod 640</code></li>
+                            <li><strong>Activar:</strong> <code>sudo systemctl enable --now named</code></li>
+                            <li><strong>Firewall:</strong> <code>sudo firewall-cmd --add-service=dns --permanent && sudo firewall-cmd --reload</code></li>
+                        </ol>
+                        <h5 id="configuracion-archivos">4.1.3. Servidor de Archivos (Ubuntu 24.04 + Docker)</h5>
+                        <ol>
+                            <li>Instalar SO, habilitar SSH.</li>
+                            <li>Instalar Docker y configurar NGINX y VSFTPD en contenedores.</li>
+                        </ol>
+                        <h5 id="configuracion-access-point">4.1.4. Access Point (Router y Aerohive)</h5>
+                        <p>Resumen de pasos: reset, configuración inicial, SSID/seguridad, desactivar DHCP del router, y aprovisionar Aerohive por CLI (DHCP, DNS, NTP, SSID y seguridad).</p>
+                        <h4 id="fase-pruebas">4.2. Fase de Pruebas y Validación</h4>
+                        <ul>
+                            <li>DHCP: clientes reciben IPs válidas y parámetros.</li>
+                            <li>DNS: resolución correcta de dominios internos.</li>
+                            <li>FTP: conexión, listado y transferencia.</li>
+                            <li>Conectividad general: pings internos/externos.</li>
+                        </ul>
+                    </section>
+
+                    <section id="resultados-conclusiones">
+                        <h3>5. Resultados y Conclusiones</h3>
+                        <p>Infraestructura funcional integrando DHCP, DNS y servidor de archivos; conectividad cableada e inalámbrica con servicios centralizados.</p>
+                        <h4 id="reflexion-aprendizaje">5.2. Reflexión del Aprendizaje</h4>
+                        <p>Se reforzaron conceptos de redes, Linux, pfSense y Docker, con enfoque en interoperabilidad y resolución de problemas.</p>
+                        <h4 id="recomendaciones">5.3. Recomendaciones</h4>
+                        <ul>
+                            <li>Seguridad: TLS/FTPS/SFTP.</li>
+                            <li>Monitoreo: métricas y alertas.</li>
+                            <li>Respaldo: configs y datos.</li>
+                            <li>Automatización: Ansible/Puppet.</li>
+                            <li>Documentación continua.</li>
+                        </ul>
+                    </section>
+
+                    <section id="anexos-referencias">
+                        <h3>6. Anexos y Referencias</h3>
+                        <div class="image-container">
+                            <img src="https://via.placeholder.com/700x400?text=Diagrama+de+Topologia+de+Red" alt="Diagrama de Topología de Red" class="gantt-diagram">
+                            <p><em>(Ejemplo de topología)</em></p>
+                        </div>
+                        <ul>
+                            <li>Documentación oficial: DHCP (ISC), BIND, NGINX, VSFTPD, Fedora, Ubuntu, pfSense, TP-Link, Aerohive.</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section id="tab-servicios" class="tab-panel" role="tabpanel" aria-labelledby="tab-servicios-btn">
+                    <h2>Estado de Servicios e Información de Conexión</h2>
         <div class="services">
             <div class="service">
-                <h3>🌐 Servidor Web</h3>
+                            <h3>Servidor Web</h3>
                 <div class="status">Activo</div>
                 <p>nginx sirviendo contenido estático en puerto 80</p>
             </div>
-            
             <div class="service">
-                <h3>📁 Servidor FTP</h3>
+                            <h3>Servidor FTP</h3>
                 <div class="status">Activo</div>
                 <p>vsftpd para transferencia de archivos en puerto 21</p>
             </div>
         </div>
-
-        <h2>📋 Información de Conexión</h2>
-        
         <div class="info-box">
-            <h4>Acceso Web:</h4>
+                        <h4>Acceso Web</h4>
             <p>URL: <code>http://localhost</code></p>
             <p>Puerto: <code>80</code></p>
         </div>
-
         <div class="info-box">
-            <h4>Acceso FTP:</h4>
+                        <h4>Acceso FTP</h4>
             <p>Servidor: <code>localhost</code></p>
             <p>Puerto: <code>21</code></p>
             <p>Usuario: <code>ftpuser</code></p>
             <p>Contraseña: <code>ftppass123</code></p>
             <p>Puertos pasivos: <code>21100-21110</code></p>
         </div>
-
         <div class="info-box">
-            <h4>Directorios:</h4>
+                        <h4>Directorios</h4>
             <p>Web: <code>/var/www/html</code></p>
             <p>FTP: <code>/home/ftpuser</code></p>
         </div>
+                </section>
 
-        <h2>📄 Informe de la práctica</h2>
+                <section id="tab-descargas" class="tab-panel" role="tabpanel" aria-labelledby="tab-descargas-btn">
+                    <h2>Descargas</h2>
         <div class="info-box">
-            <p>Puedes descargar el informe y subir archivos relacionados a la práctica (DNS/DHCP/etc.).</p>
+                        <p>Descarga el informe y accede a la carpeta de descargas.</p>
             <div class="actions">
                 <a class="btn" href="/downloads/informe.pdf" download>Descargar informe</a>
                 <a class="btn secondary" href="/downloads/">Ver carpeta de descargas</a>
             </div>
         </div>
+                </section>
 
-        <h2>📤 Subir archivos</h2>
+                <section id="tab-subir" class="tab-panel" role="tabpanel" aria-labelledby="tab-subir-btn">
+                    <h2>Subir archivos</h2>
         <div class="info-box">
             <form id="uploadForm">
                 <input type="file" id="fileInput" name="file" required />
                 <button class="btn" type="submit">Subir</button>
                 <span id="uploadStatus"></span>
             </form>
+                    </div>
+                </section>
+            </div>
         </div>
 
         <footer>
@@ -195,6 +435,45 @@
         </footer>
     </div>
     <script>
+        // Tabs logic (accessible)
+        const tabButtons = Array.from(document.querySelectorAll('.tablist [role="tab"]'));
+        const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
+
+        function activateTab(button) {
+            tabButtons.forEach(btn => btn.setAttribute('aria-selected', String(btn === button)));
+            tabPanels.forEach(panel => {
+                const isActive = panel.id === button.getAttribute('aria-controls');
+                panel.classList.toggle('active', isActive);
+            });
+            // Optional: update hash
+            const id = button.getAttribute('aria-controls');
+            if (id) location.hash = id;
+        }
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => activateTab(btn));
+            btn.addEventListener('keydown', (e) => {
+                const idx = tabButtons.indexOf(btn);
+                if (e.key === 'ArrowRight') {
+                    const next = tabButtons[(idx + 1) % tabButtons.length];
+                    next.focus();
+                    activateTab(next);
+                } else if (e.key === 'ArrowLeft') {
+                    const prev = tabButtons[(idx - 1 + tabButtons.length) % tabButtons.length];
+                    prev.focus();
+                    activateTab(prev);
+                }
+            });
+        });
+
+        // Activate from hash on load
+        window.addEventListener('load', () => {
+            const hash = location.hash.replace('#', '');
+            if (!hash) return;
+            const targetBtn = tabButtons.find(b => b.getAttribute('aria-controls') === hash);
+            if (targetBtn) activateTab(targetBtn);
+        });
+
         const form = document.getElementById('uploadForm');
         const statusEl = document.getElementById('uploadStatus');
         form?.addEventListener('submit', async (e) => {
