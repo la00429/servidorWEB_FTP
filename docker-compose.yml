@@ -41,7 +41,7 @@ services:
       - 8.8.8.8             # DNS secundario (fallback)
     # Opciones adicionales de DNS
     dns_search:
-      - local               # Dominio de búsqueda
+      - local                # Dominio de búsqueda
     # Configuración de red avanzada
     extra_hosts:
       - "dns-server:192.168.1.2"    # IP de tu servidor DNS (cambiar)

@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     openssh-server \
     net-tools \
+    python3 \
+    python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -33,12 +35,14 @@ COPY configs/vsftpd.conf /etc/vsftpd.conf
 COPY configs/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY scripts/start.sh /start.sh
 COPY scripts/configure-network.sh /scripts/configure-network.sh
+COPY app/ /app/
 
 # Copiar página web de ejemplo
 COPY www/ /var/www/html/
 
 # Dar permisos de ejecución a los scripts
-RUN chmod +x /start.sh /scripts/configure-network.sh
+RUN pip3 install flask werkzeug \
+    && chmod +x /start.sh /scripts/configure-network.sh
 
 # Exponer puertos
 # 80: HTTP (nginx)

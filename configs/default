@@ -18,6 +18,23 @@ server {
         try_files $uri $uri/ =404;
     }
 
+    # Proxy para backend de subida (Flask en 127.0.0.1:5000)
+    location /upload {
+        proxy_pass http://127.0.0.1:5000/upload;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        client_max_body_size 100m;
+    }
+
+    # Listado/descarga de archivos desde /home/ftpuser (solo lectura)
+    location /downloads/ {
+        alias /home/ftpuser/;
+        autoindex on;
+        autoindex_exact_size off;
+        autoindex_localtime on;
+    }
+
     # Deny access to hidden files
     location ~ /\. {
         deny all;

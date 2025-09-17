@@ -99,6 +99,27 @@
             font-family: 'Courier New', monospace;
         }
 
+        .actions {
+            margin-top: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            text-align: left;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .btn.secondary {
+            background: #4a5568;
+        }
+
         footer {
             margin-top: 2rem;
             padding-top: 1rem;
@@ -150,10 +171,54 @@
             <p>FTP: <code>/home/ftpuser</code></p>
         </div>
 
+        <h2>📄 Informe de la práctica</h2>
+        <div class="info-box">
+            <p>Puedes descargar el informe y subir archivos relacionados a la práctica (DNS/DHCP/etc.).</p>
+            <div class="actions">
+                <a class="btn" href="/downloads/informe.pdf" download>Descargar informe</a>
+                <a class="btn secondary" href="/downloads/">Ver carpeta de descargas</a>
+            </div>
+        </div>
+
+        <h2>📤 Subir archivos</h2>
+        <div class="info-box">
+            <form id="uploadForm">
+                <input type="file" id="fileInput" name="file" required />
+                <button class="btn" type="submit">Subir</button>
+                <span id="uploadStatus"></span>
+            </form>
+        </div>
+
         <footer>
             <p>Servidor creado con Docker + Ubuntu Server + nginx + vsftpd</p>
             <p>Sistema operativo: Ubuntu 22.04 LTS</p>
         </footer>
     </div>
+    <script>
+        const form = document.getElementById('uploadForm');
+        const statusEl = document.getElementById('uploadStatus');
+        form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusEl.textContent = 'Subiendo...';
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const data = new FormData();
+            data.append('file', file);
+            try {
+                const res = await fetch('/upload', {
+                    method: 'POST',
+                    body: data
+                });
+                const json = await res.json();
+                if (json.ok) {
+                    statusEl.textContent = `Subido: ${json.filename}`;
+                } else {
+                    statusEl.textContent = `Error: ${json.error || 'Desconocido'}`;
+                }
+            } catch (err) {
+                statusEl.textContent = 'Error de red al subir';
+            }
+        });
+    </script>
 </body>
 </html>
