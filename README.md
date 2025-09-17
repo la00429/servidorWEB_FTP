@@ -1,14 +1,16 @@
 # 🚀 Servidor Web + FTP con Docker
 
-Este proyecto implementa un servidor completo con **nginx** (servidor web) y **vsftpd** (servidor FTP) ejecutándose en un contenedor Docker basado en **Ubuntu Server 22.04 LTS**.
+Este proyecto implementa un servidor completo con **nginx** (servidor web), **vsftpd** (servidor FTP) y **Flask** (backend de subida) ejecutándose en un contenedor Docker basado en **Ubuntu Server 22.04 LTS**. Incluye integración con servidores DNS/DHCP externos para entornos de red empresarial.
 
 ## 🏗️ Arquitectura
 
 - **Sistema Operativo**: Ubuntu 22.04 LTS (imagen ligera)
 - **Servidor Web**: nginx
 - **Servidor FTP**: vsftpd
+- **Backend de Subida**: Flask (Python)
 - **Orquestador de Procesos**: supervisor
 - **Contenedor**: Docker
+- **Integración**: DNS/DHCP externos (192.168.1.2/192.168.1.3)
 
 ## 📁 Estructura del Proyecto
 
@@ -16,17 +18,24 @@ Este proyecto implementa un servidor completo con **nginx** (servidor web) y **v
 serverWEB/
 ├── Dockerfile                 # Imagen del contenedor
 ├── docker-compose.yml        # Orquestación del servicio
+├── docker-compose.host-network.yml  # Configuración para red host
 ├── configs/                  # Archivos de configuración
 │   ├── nginx.conf           # Configuración principal de nginx
 │   ├── default              # Virtual host por defecto
 │   ├── vsftpd.conf          # Configuración de vsftpd
 │   └── supervisord.conf     # Configuración de supervisor
+├── app/                     # Backend de subida de archivos
+│   └── upload_server.py     # Servidor Flask para /upload
 ├── scripts/
-│   └── start.sh             # Script de inicialización
+│   ├── start.sh             # Script de inicialización
+│   ├── configure-network.sh # Configuración de red
+│   └── test-dns-dhcp.sh     # Pruebas de conectividad
 ├── www/                     # Contenido web
-│   └── index.html          # Página principal
+│   └── index.html          # Página principal con formulario
 ├── ftp-data/               # Directorio para archivos FTP
-└── logs/                   # Logs del sistema
+│   └── uploads/            # Archivos subidos vía web
+├── logs/                   # Logs del sistema
+└── network-config.env      # Variables de configuración de red
 ```
 
 ## 🚀 Instalación y Uso
@@ -44,9 +53,30 @@ cd serverWEB
 
 # Construir y ejecutar con docker-compose
 docker-compose up --build -d
+
+# Si el puerto 80 está ocupado, usar puerto 8080:
+# Editar docker-compose.yml: cambiar "80:80" por "8080:80"
+# Luego: docker-compose down && docker-compose build --no-cache && docker-compose up -d
 ```
 
-### 2. Verificar que los Servicios Estén Activos
+### 2. Configuración de Red (DNS/DHCP)
+
+Para integrar con servidores DNS/DHCP externos:
+
+```bash
+# Modo bridge (recomendado para desarrollo)
+docker-compose up -d
+
+# Modo host (recomendado para producción con DHCP)
+docker-compose -f docker-compose.host-network.yml up -d
+```
+
+**Configuración de IPs:**
+- DNS/DHCP: 192.168.1.2
+- Servidor de archivos: 192.168.1.3
+- Acceso web: http://192.168.1.3 (o :8080)
+
+### 3. Verificar que los Servicios Estén Activos
 
 ```bash
 # Ver logs del contenedor
@@ -77,17 +107,22 @@ Este proyecto está configurado para que **todos los datos persistan** cuando se
 ## 🌐 Acceso a los Servicios
 
 ### Servidor Web (nginx)
-- **URL**: http://localhost
-- **Puerto**: 80
+- **URL**: http://localhost (o http://IP_DEL_SERVIDOR)
+- **Puerto**: 80 (o 8080 si el 80 está ocupado)
 - **Directorio**: `/var/www/html` (mapeado a `./www`)
 
 ### Servidor FTP (vsftpd)
-- **Servidor**: localhost
+- **Servidor**: localhost (o IP_DEL_SERVIDOR)
 - **Puerto**: 21
 - **Usuario**: `ftpuser`
 - **Contraseña**: `ftppass123`
 - **Directorio**: `/home/ftpuser` (mapeado a `./ftp-data`)
 - **Puertos pasivos**: 21100-21110
+
+### Subida/Descarga de Archivos
+- **Descarga vía web**: http://IP_DEL_SERVIDOR/downloads/ (cualquier archivo en `./ftp-data`)
+- **Subida vía web**: formulario en la página principal (se guarda en `./ftp-data/uploads`)
+- **FTP**: usar cliente (FileZilla/WinSCP) o consola
 
 ## 📝 Configuración
 
@@ -187,6 +222,22 @@ ps aux | grep -E "(nginx|vsftpd)"
 ### Problemas con FTP pasivo
 1. Verificar que los puertos 21100-21110 estén abiertos
 2. Ajustar `pasv_address` en `vsftpd.conf`
+
+### Error "Address already in use" en puerto 80
+1. **Opción 1**: Liberar el puerto 80 (detener Apache/IIS/etc.)
+2. **Opción 2**: Cambiar a puerto 8080:
+   - Editar `docker-compose.yml`: cambiar `"80:80"` por `"8080:80"`
+   - Reconstruir: `docker-compose down && docker-compose build --no-cache && docker-compose up -d`
+   - Acceder con: `http://IP_DEL_SERVIDOR:8080`
+
+### "Error de red al subir" desde cliente
+1. Verificar que nginx esté corriendo (puerto 80 o 8080)
+2. Comprobar que el backend Flask esté activo:
+   - `docker exec -it ubuntu-nginx-ftp pgrep -a python3`
+   - `docker exec -it ubuntu-nginx-ftp tail -f /var/log/supervisor/upload_server.log`
+3. Probar subida directa:
+   - `curl -F "file=@archivo.zip" http://IP_DEL_SERVIDOR/upload`
+4. Verificar firewall/red (puertos 80/8080, 21, 21100-21110)
 
 ## 📈 Optimización
 
