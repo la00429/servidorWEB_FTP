@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 import os
+import subprocess
+import sys
 
 app = Flask(__name__)
 
@@ -26,6 +28,46 @@ def upload_file():
     file.save(save_path)
 
     return jsonify({"ok": True, "filename": filename, "path": save_path}), 200
+
+
+@app.route("/generate-pdf", methods=["POST", "GET"])
+def generate_pdf():
+    """Genera el PDF del informe técnico"""
+    try:
+        # Crear directorio de descargas si no existe
+        downloads_dir = "/var/www/html/downloads"
+        os.makedirs(downloads_dir, exist_ok=True)
+        
+        # Generar PDF usando el script simple
+        result = subprocess.run([
+            sys.executable, 
+            "/app/simple_pdf_generator.py"
+        ], capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            pdf_path = os.path.join(downloads_dir, "informe-tecnico.pdf")
+            if os.path.exists(pdf_path):
+                return send_file(pdf_path, as_attachment=True, download_name="informe-tecnico.pdf")
+            else:
+                return jsonify({"ok": False, "error": "PDF no generado correctamente"}), 500
+        else:
+            return jsonify({"ok": False, "error": f"Error al generar PDF: {result.stderr}"}), 500
+            
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Error interno: {str(e)}"}), 500
+
+
+@app.route("/downloads/<filename>")
+def download_file(filename):
+    """Sirve archivos de la carpeta de descargas"""
+    try:
+        file_path = os.path.join("/var/www/html/downloads", filename)
+        if os.path.exists(file_path):
+            return send_file(file_path, as_attachment=True)
+        else:
+            return jsonify({"error": "Archivo no encontrado"}), 404
+    except Exception as e:
+        return jsonify({"error": f"Error al servir archivo: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
