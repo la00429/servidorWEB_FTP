@@ -3,12 +3,17 @@ from werkzeug.utils import secure_filename
 import os
 import subprocess
 import sys
+import ftplib
+import tempfile
 
 app = Flask(__name__)
 
-# Carpeta donde se guardarán los archivos subidos
-UPLOAD_DIR = "/home/ftpuser/uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+# Configuración FTP
+FTP_HOST = "localhost"
+FTP_PORT = 21
+FTP_USER = "ftpuser"
+FTP_PASS = "ftppass123"
+FTP_DIR = "/home/vsftpd"
 
 # Tamaño máximo (por ejemplo, 100 MB)
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
@@ -24,10 +29,29 @@ def upload_file():
         return jsonify({"ok": False, "error": "Nombre de archivo vacío"}), 400
 
     filename = secure_filename(file.filename)
-    save_path = os.path.join(UPLOAD_DIR, filename)
-    file.save(save_path)
-
-    return jsonify({"ok": True, "filename": filename, "path": save_path}), 200
+    
+    try:
+        # Conectar al servidor FTP
+        ftp = ftplib.FTP()
+        ftp.connect(FTP_HOST, FTP_PORT)
+        ftp.login(FTP_USER, FTP_PASS)
+        
+        # Cambiar al directorio de FTP
+        ftp.cwd(FTP_DIR)
+        
+        # Subir archivo usando FTP
+        file.seek(0)  # Asegurar que el archivo esté al inicio
+        ftp.storbinary(f'STOR {filename}', file)
+        
+        # Cerrar conexión FTP
+        ftp.quit()
+        
+        return jsonify({"ok": True, "filename": filename, "message": "Archivo subido vía FTP correctamente"}), 200
+        
+    except ftplib.all_errors as e:
+        return jsonify({"ok": False, "error": f"Error de FTP: {str(e)}"}), 500
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Error interno: {str(e)}"}), 500
 
 
 @app.route("/generate-pdf", methods=["POST", "GET"])
