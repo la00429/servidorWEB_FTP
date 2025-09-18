@@ -41,15 +41,22 @@ def upload_file():
             ftp.cwd(FTP_DIR)
             print(f"Cambiado a directorio: {FTP_DIR}")
         except ftplib.error_perm as e:
-            # Si no puede cambiar al directorio, crear el directorio
             print(f"No se pudo cambiar a {FTP_DIR}: {e}")
+            # Usar directorio raíz si no puede cambiar
+            pass
+        
+        # Crear y cambiar al subdirectorio uploads
+        try:
+            ftp.cwd("uploads")
+            print("Cambiado a directorio: uploads")
+        except ftplib.error_perm:
             try:
-                ftp.mkd(FTP_DIR)
-                ftp.cwd(FTP_DIR)
-                print(f"Directorio {FTP_DIR} creado y cambiado")
-            except:
-                print("Usando directorio raíz")
-                pass
+                ftp.mkd("uploads")
+                ftp.cwd("uploads")
+                print("Directorio uploads creado y cambiado")
+            except Exception as e:
+                print(f"No se pudo crear directorio uploads: {e}")
+                # Continuar en el directorio actual
         
         # Subir archivo usando FTP
         file.seek(0)  # Asegurar que el archivo esté al inicio
