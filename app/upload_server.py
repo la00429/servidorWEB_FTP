@@ -9,11 +9,11 @@ import tempfile
 app = Flask(__name__)
 
 # Configuración FTP
-FTP_HOST = "localhost"
+FTP_HOST = "localhost"  # Mismo contenedor
 FTP_PORT = 21
 FTP_USER = "ftpuser"
 FTP_PASS = "ftppass123"
-FTP_DIR = "/home/vsftpd"
+FTP_DIR = "/home/ftpuser"  # Ruta correcta según docker-compose
 
 # Tamaño máximo (por ejemplo, 100 MB)
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
@@ -37,7 +37,19 @@ def upload_file():
         ftp.login(FTP_USER, FTP_PASS)
         
         # Cambiar al directorio de FTP
-        ftp.cwd(FTP_DIR)
+        try:
+            ftp.cwd(FTP_DIR)
+            print(f"Cambiado a directorio: {FTP_DIR}")
+        except ftplib.error_perm as e:
+            # Si no puede cambiar al directorio, crear el directorio
+            print(f"No se pudo cambiar a {FTP_DIR}: {e}")
+            try:
+                ftp.mkd(FTP_DIR)
+                ftp.cwd(FTP_DIR)
+                print(f"Directorio {FTP_DIR} creado y cambiado")
+            except:
+                print("Usando directorio raíz")
+                pass
         
         # Subir archivo usando FTP
         file.seek(0)  # Asegurar que el archivo esté al inicio
