@@ -176,13 +176,13 @@
             border-top: 1px solid #e2e8f0;
             color: #718096;
             font-size: 0.9rem;
+            Text-align: center
         }
 
         /* Tabs */
         .tabs {
             margin-top: 1.25rem;
         }
-        .tablist { display: none; }
         .tablist {
             display: flex;
             gap: 0.5rem;
@@ -256,71 +256,22 @@
     </style>
 </head>
 <body>
-    <section class="site-hero">
-        <h1>Informe Técnico de Infraestructura de Red</h1>
-        <p>Proyecto ABP: DHCP, DNS y Servidor de Archivos en un entorno Dockerizado con NGINX y VSFTPD.</p>
-        <div class="hero-cta">
-            <button class="btn light" onclick="generateAndDownloadPDF()">Descargar Informe (PDF)</button>
-            <a class="btn white-outline" href="#tabla-de-contenidos">Ver contenido</a>
-        </div>
-        <div class="quick-nav">
-            <a href="#introduccion-contexto">Introducción</a>
-            <a href="#marco-teorico">Marco teórico</a>
-            <a href="#planificacion">Planificación</a>
-            <a href="#desarrollo-proyecto">Desarrollo</a>
-            <a href="#resultados-conclusiones">Resultados</a>
-            <a href="#anexos-referencias">Anexos</a>
-        </div>
-    </section>
 
     <div class="container">
-        <h1>Servidor Web + FTP</h1>
-        <p class="lead">Servidor Ubuntu con nginx y vsftpd ejecutándose en Docker</p>
+        <h1>Documentación de Proyecto:</h1>
 
         <div class="tabs" id="tabs">
             <div class="tablist" role="tablist" aria-label="Navegación de secciones">
-                <button role="tab" aria-selected="true" aria-controls="tab-informe" id="tab-informe-btn">Informe</button>
-                <button role="tab" aria-selected="false" aria-controls="tab-servicios" id="tab-servicios-btn">Servicios</button>
-                <button role="tab" aria-selected="false" aria-controls="tab-descargas" id="tab-descargas-btn">Descargas</button>
-                <button role="tab" aria-selected="false" aria-controls="tab-subir" id="tab-subir-btn">Subir archivos</button>
+                <button role="tab" aria-selected="true" aria-controls="tab-servicios" id="tab-servicios-btn">Servicios</button>
+                <button role="tab" aria-selected="false" aria-controls="tab-archivos" id="tab-archivos-btn">Subir y descargar</button>
             </div>
 
             <div class="tab-panels">
-                <section id="tab-informe" class="tab-panel active" role="tabpanel" aria-labelledby="tab-informe-btn">
-                    <header>
-                        <h2>Informe ABP: Servidor DHCP, DNS y Servidor de Archivos</h2>
-                        <p style="font-size: 1rem; margin-bottom: 0.25rem;">Grupo: David Santiago Lotero Rodríguez, Luis Eduardo Hernandez Rincon, Laura Vanessa Figueredo Martínez, Juan Sebastian Joe Felipe Rodriguez Mateus</p>
-                        <p style="font-size: 1rem; margin-bottom: 0.25rem;">Docente: Ing. Frey Alfonso Santamaría Buitrago</p>
-                        <p style="font-size: 1rem;">Fecha: 2025</p>
-                    </header>
-
-                    <section class="report-hero" aria-label="Resumen del informe y acciones">
-                        <div>
-                            <h2 style="font-size:1.4rem;">Resumen y Acciones</h2>
-                            <div class="report-meta">
-                                <span><strong>Proyecto:</strong> Infraestructura DHCP, DNS y Archivos</span>
-                                <span>•</span>
-                                <span><strong>SO:</strong> Fedora, pfSense, Ubuntu + Docker</span>
-                            </div>
-                            <div class="badges">
-                                <span class="badge">DHCP</span>
-                                <span class="badge alt">DNS</span>
-                                <span class="badge">NGINX</span>
-                                <span class="badge alt">VSFTPD</span>
-                                <span class="badge">Docker</span>
-                            </div>
-                            <div class="hero-actions">
-                                <button class="btn" onclick="generateAndDownloadPDF()">Imprimir / Descargar PDF</button>
-                                <a class="btn outline" href="#tabla-de-contenidos">Ir al contenido</a>
-                                <a class="btn ghost" href="#resultados-conclusiones">Ver conclusiones</a>
-                            </div>
-                        </div>
-                        <div class="divider"></div>
-                        <p class="lead" style="margin:0;">Este informe documenta el análisis, diseño, implementación y validación de una infraestructura de red con servicios de DHCP, DNS y servidor de archivos. Incluye planificación, justificación de tecnologías y recomendaciones.</p>
-                    </section>
-
-                    <!-- Carrusel del informe -->
-                    <section class="card" id="informe-carrusel" aria-label="Carrusel del informe">
+                <section id="tab-servicios" class="tab-panel active" role="tabpanel" aria-labelledby="tab-servicios-btn">
+                    <h2>Servicios: Funcionamiento, configuración, problemas y pasos de instalación</h2>
+                    
+                    <!-- Carrusel de servicios -->
+                    <section class="card" id="servicios-carrusel" aria-label="Carrusel de servicios">
                         <style>
                             .carousel { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #e2e8f0; }
                             .carousel-track { display: flex; transition: transform 300ms ease; }
@@ -337,107 +288,150 @@
                         <div class="carousel" id="carousel">
                             <div class="carousel-track" id="carouselTrack">
                                 <div class="carousel-slide">
-                                    <h4 class="carousel-title">1. Introducción y Contexto</h4>
-                                    <p class="small">El reto principal es diseñar e implementar servidores DHCP, DNS y de archivos para asegurar conectividad, resolución de nombres y transferencia de archivos en la red.</p>
-                                    <h5 class="muted">Objetivo General</h5>
+                                    <span id="servicios-dhcp"></span>
+                                    <h4 class="carousel-title">1. DHCP (Fedora Server)</h4>
+                                    <h5 class="muted">Funcionamiento</h5>
+                                    <p class="small">Proporciona parámetros IP automáticamente mediante el ciclo DORA (Discover, Offer, Request, Ack) y gestiona concesiones.</p>
+                                    <h5 class="muted">Configuración</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code>sudo dnf install -y dhcp-server
+sudo nano /etc/dhcp/dhcpd.conf
+# ejemplo: red 192.168.10.0/24, rango 192.168.10.100-200
+subnet 192.168.10.0 netmask 255.255.255.0 {
+  range 192.168.10.100 192.168.10.200;
+  option domain-name-servers 192.168.10.2;
+}
+
+# Elegir interfaz
+sudo sh -c 'echo DHCPDARGS=ens33 > /etc/sysconfig/dhcpd'
+
+sudo systemctl enable --now dhcpd
+sudo firewall-cmd --permanent --add-service=dhcp
+sudo firewall-cmd --reload</code></pre>
+                                    <h5 class="muted">Problemas y soluciones</h5>
                                     <ul class="small">
-                                        <li>Diseñar, implementar y documentar una configuración completa de DNS (pfSense), DHCP (Fedora) y servidor de archivos (NGINX).</li>
+                                        <li>Servicio no levanta: revisar <code>journalctl -u dhcpd -xe</code> y sintaxis de <code>dhcpd.conf</code></li>
+                                        <li>Sin arrendamientos: confirmar interfaz en <code>/etc/sysconfig/dhcpd</code> y VLANs</li>
+                                        <li>Firewall bloquea: habilitar servicio DHCP y recargar reglas</li>
                                     </ul>
-                                    <h5 class="muted">Objetivos Específicos</h5>
+                                    <h5 class="muted">Pasos de instalación</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code>sudo dnf update -y
+sudo dnf install -y dhcp-server
+sudo nano /etc/dhcp/dhcpd.conf
+sudo systemctl enable --now dhcpd</code></pre>
+                                    <h5 class="muted">Archivos clave</h5>
                                     <ul class="small">
-                                        <li>Comprender protocolos de red y su rol.</li>
-                                        <li>Aplicar procedimientos de configuración y verificar interoperabilidad.</li>
-                                        <li>Evaluar resultados y documentar el proceso.</li>
-                                    </ul>
-                                    <h5 class="muted">Alcance</h5>
-                                    <p class="small">Incluye análisis, diseño y configuración de DHCP, DNS y servidor de archivos; excluye servicios avanzados fuera del entorno de práctica.</p>
-                                </div>
-                                <div class="carousel-slide">
-                                    <h4 class="carousel-title">2. Marco Teórico y Conceptual</h4>
-                                    <h5 class="muted">2.1.1. Servidor DHCP</h5>
-                                    <p class="small">Asigna parámetros de red automáticamente. Ciclo DORA: Discover, Offer, Request, Acknowledge.</p>
-                                    <ul class="small"><li>Asignación dinámica, gestión de IPs, configuración centralizada, renovación de concesión.</li></ul>
-                                    <h5 class="muted">2.1.2. Servidor DNS</h5>
-                                    <p class="small">Traduce dominios a direcciones IP mediante resolución recursiva y caché.</p>
-                                    <ul class="small"><li>Jerarquía, registros A/AAAA/CNAME/MX, caché, zonas de autoridad.</li></ul>
-                                    <h5 class="muted">2.1.3. Servidor de Archivos</h5>
-                                    <p class="small">Centraliza archivos y permite subir/descargar (FTP).</p>
-                                </div>
-                                <div class="carousel-slide">
-                                    <h4 class="carousel-title">3. Planificación</h4>
-                                    <h5 class="muted">División de Tareas</h5>
-                                    <ul class="small">
-                                        <li>David Santiago Lotero Rodriguez</li>
-                                        <li>Luis Eduardo Hernandez Rincón</li>
-                                        <li>Laura Vanesa Figueredo</li>
-                                        <li>Juan Sebastian Joe Felipe Rodriguez Mateus</li>
-                                    </ul>
-                                    <h5 class="muted">Diagrama de Gantt</h5>
-                                    <div class="image-container">
-                                        <img src="https://via.placeholder.com/800x400?text=Diagrama+de+Gantt+Redes" alt="Diagrama de Gantt Redes" class="gantt-diagram">
-                                    </div>
-                                    <h5 class="muted">Justificación de SO</h5>
-                                    <ul class="small">
-                                        <li><strong>Fedora Server (DHCP):</strong> Innovación, seguridad y facilidad de configuración.</li>
-                                        <li><strong>pfSense (DNS):</strong> Robusto, interfaz web y control granular.</li>
-                                        <li><strong>Ubuntu + Docker (Archivos):</strong> Estabilidad y contenerización (NGINX, VSFTPD).</li>
+                                        <li><code>/etc/dhcp/dhcpd.conf</code></li>
+                                        <li><code>/var/lib/dhcpd/dhcpd.leases</code></li>
+                                        <li><code>/etc/sysconfig/dhcpd</code></li>
                                     </ul>
                                 </div>
                                 <div class="carousel-slide">
-                                    <h4 class="carousel-title">4. Desarrollo del Proyecto</h4>
-                                    <h5 class="muted">4.1.1. DHCP (Fedora Server 42)</h5>
-                                    <ol class="small">
-                                        <li><strong>Actualizar paquetes:</strong> <code>sudo dnf update -y</code></li>
-                                        <li><strong>Instalar:</strong> <code>sudo dnf install dhcp-server radvd bind bind-utils -y</code></li>
-                                        <li><strong>Configurar /etc/dhcp/dhcpd.conf</strong> con red, rango, DNS y reserva por MAC.</li>
-                                        <li><strong>Definir interfaz en /etc/sysconfig/dhcpd</strong></li>
-                                        <li><strong>Activar servicio:</strong> <code>sudo systemctl enable --now dhcpd</code></li>
-                                        <li><strong>Firewall:</strong> <code>sudo firewall-cmd --permanent --add-service=dhcp && sudo firewall-cmd --reload</code></li>
-                                    </ol>
-                                    <h5 class="muted">4.1.2. DNS (mismo servidor)</h5>
-                                    <ol class="small">
-                                        <li><strong>Instalar:</strong> <code>sudo dnf install bind bind-utils -y</code></li>
-                                        <li><strong>Editar /etc/named.conf</strong> y zona <code>/var/named/grupocuatro.com.zone</code></li>
-                                        <li><strong>Permisos:</strong> <code>chown named:named</code>, <code>chmod 640</code></li>
-                                        <li><strong>Activar:</strong> <code>sudo systemctl enable --now named</code></li>
-                                        <li><strong>Firewall:</strong> <code>sudo firewall-cmd --add-service=dns --permanent && sudo firewall-cmd --reload</code></li>
-                                    </ol>
-                                    <h5 class="muted">4.1.3. Servidor de Archivos (Ubuntu 24.04 + Docker)</h5>
-                                    <ol class="small">
-                                        <li>Instalar SO, habilitar SSH.</li>
-                                        <li>Instalar Docker y configurar NGINX y VSFTPD en contenedores.</li>
-                                    </ol>
-                                    <h5 class="muted">4.1.4. Access Point (Router y Aerohive)</h5>
-                                    <p class="small">Resumen: reset, configuración inicial, SSID/seguridad, desactivar DHCP, y aprovisionar Aerohive (DHCP, DNS, NTP, SSID y seguridad).</p>
-                                    <h5 class="muted">4.2. Pruebas y Validación</h5>
+                                    <span id="servicios-dns"></span>
+                                    <h4 class="carousel-title">2. DNS (BIND en Fedora)</h4>
+                                    <h5 class="muted">Funcionamiento</h5>
+                                    <p class="small">Resuelve nombres a IP mediante consultas recursivas, autoridad y caché. Usa registros como A, AAAA, CNAME, MX.</p>
+                                    <h5 class="muted">Configuración</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code>sudo dnf install -y bind bind-utils
+sudo nano /etc/named.conf
+# Incluir zona
+zone "grupo04.com" IN {
+  type master;
+  file "/var/named/grupo04.com.zone";
+};
+
+sudo nano /var/named/grupo04.com.zone
+$TTL 1H
+@   IN SOA ns1.grupo04.com. admin.grupo04.com. (
+        2025010101 1H 15M 1W 1H )
+    IN NS ns1
+ns1 IN A 192.168.1.2
+@ IN A 192.168.1.3
+www IN A 192.168.1.3
+
+sudo chown named:named /var/named/Grupo04.com.zone
+sudo chmod 640 /var/named/Grupo04.com.zone
+sudo systemctl enable --now named
+sudo firewall-cmd --permanent --add-service=dns && sudo firewall-cmd --reload</code></pre>
+                                    <h5 class="muted">Problemas y soluciones</h5>
                                     <ul class="small">
-                                        <li>DHCP: clientes reciben IPs válidas y parámetros.</li>
-                                        <li>DNS: resolución correcta de dominios internos.</li>
-                                        <li>FTP: conexión, listado y transferencia.</li>
-                                        <li>Conectividad general: pings internos/externos.</li>
+                                        <li>Zona no carga: revisar <code>/var/log/messages</code> y <code>named-checkconf</code>/<code>named-checkzone</code></li>
+                                        <li>Sin respuesta: verificar firewall y escucha en <code>127.0.0.1, 0.0.0.0</code></li>
+                                        <li>Registros erróneos: validar TTL, SOA y serial</li>
+                                    </ul>
+                                    <h5 class="muted">Pasos de instalación</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code>sudo dnf update -y
+sudo dnf install -y bind bind-utils
+sudo systemctl enable --now named</code></pre>
+                                    <h5 class="muted">Archivos clave</h5>
+                                    <ul class="small">
+                                        <li><code>/etc/named.conf</code></li>
+                                        <li><code>/var/named/*.zone</code></li>
                                     </ul>
                                 </div>
                                 <div class="carousel-slide">
-                                    <h4 class="carousel-title">5. Resultados y Conclusiones</h4>
-                                    <p class="small">Infraestructura funcional integrando DHCP, DNS y servidor de archivos; conectividad cableada e inalámbrica con servicios centralizados.</p>
-                                    <h5 class="muted">Reflexión del Aprendizaje</h5>
-                                    <p class="small">Se reforzaron conceptos de redes, Linux, pfSense y Docker, con enfoque en interoperabilidad y resolución de problemas.</p>
-                                    <h5 class="muted">Recomendaciones</h5>
+                                    <span id="servicios-nginx"></span>
+                                    <h4 class="carousel-title">3. Servidor Web (NGINX en Docker)</h4>
+                                    <h5 class="muted">Funcionamiento</h5>
+                                    <p class="small">Servidor HTTP estático/reverso. En este proyecto sirve contenido de <code>www/</code> por el puerto 80 dentro de un contenedor.</p>
+                                    <h5 class="muted">Configuración</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code># Docker Compose (extracto)
+services:
+  nginx:
+    image: nginx:stable
+    ports:
+      - "80:80"
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+      - ./configs/nginx.conf:/etc/nginx/nginx.conf:ro</code></pre>
+                                    <h5 class="muted">Problemas y soluciones</h5>
                                     <ul class="small">
-                                        <li>Seguridad: TLS/FTPS/SFTP.</li>
-                                        <li>Monitoreo: métricas y alertas.</li>
-                                        <li>Respaldo: configs y datos.</li>
-                                        <li>Automatización: Ansible/Puppet.</li>
-                                        <li>Documentación continua.</li>
+                                        <li>Error 404: verificar ruta del volumen <code>./www</code> y permisos</li>
+                                        <li>Nginx no arranca: validar <code>nginx.conf</code> con <code>nginx -t</code> dentro del contenedor</li>
+                                        <li>Puerto en uso: liberar 80 o mapear a otro, p. ej. <code>8080:80</code></li>
+                                    </ul>
+                                    <h5 class="muted">Pasos de instalación</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code>docker compose up -d nginx
+# logs
+docker compose logs -f nginx</code></pre>
+                                    <h5 class="muted">Archivos clave</h5>
+                                    <ul class="small">
+                                        <li><code>configs/nginx.conf</code></li>
+                                        <li><code>www/</code></li>
                                     </ul>
                                 </div>
                                 <div class="carousel-slide">
-                                    <h4 class="carousel-title">6. Anexos y Referencias</h4>
-                                    <div class="image-container">
-                                        <img src="https://via.placeholder.com/700x400?text=Diagrama+de+Topologia+de+Red" alt="Diagrama de Topología de Red" class="gantt-diagram">
-                                    </div>
+                                    <span id="servicios-vsftpd"></span>
+                                    <h4 class="carousel-title">4. Servidor de Archivos (VSFTPD en Docker)</h4>
+                                    <h5 class="muted">Funcionamiento</h5>
+                                    <p class="small">FTP para subir/descargar. VSFTPD expone puerto 21 y un rango pasivo mapeado al host.</p>
+                                    <h5 class="muted">Configuración</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code># Docker Compose (extracto)
+services:
+  vsftpd:
+    image: fauria/vsftpd
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+    environment:
+      - FTP_USER=ftpuser
+      - FTP_PASS=ftppass123
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+    volumes:
+      - ./ftp-data:/home/vsftpd</code></pre>
+                                    <h5 class="muted">Problemas y soluciones</h5>
                                     <ul class="small">
-                                        <li>Documentación: DHCP (ISC), BIND, NGINX, VSFTPD, Fedora, Ubuntu, pfSense, TP-Link, Aerohive.</li>
+                                        <li>Conexión pasiva falla: abrir puertos 21100-21110 en firewall/router</li>
+                                        <li>Permisos: ajustar permisos de <code>ftp-data/</code> para escritura del usuario</li>
+                                        <li>Cliente no lista: forzar modo pasivo en el cliente</li>
+                                    </ul>
+                                    <h5 class="muted">Pasos de instalación</h5>
+                                    <pre class="small" style="background: #f8f9fa; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code>docker compose up -d vsftpd
+# probar con cliente FTP (p. ej. FileZilla)</code></pre>
+                                    <h5 class="muted">Rutas y puertos</h5>
+                                    <ul class="small">
+                                        <li><code>ftp-data/</code> (datos)</li>
+                                        <li>Puerto <code>21</code> y pasivos <code>21100-21110</code></li>
                                     </ul>
                                 </div>
                             </div>
@@ -454,68 +448,36 @@
                     <!-- Secciones largas eliminadas; ahora todo vive en el carrusel -->
                 </section>
 
-                <section id="tab-servicios" class="tab-panel" role="tabpanel" aria-labelledby="tab-servicios-btn">
-                    <h2>Estado de Servicios e Información de Conexión</h2>
-        <div class="services">
-            <div class="service">
-                            <h3>Servidor Web</h3>
-                <div class="status">Activo</div>
-                <p>nginx sirviendo contenido estático en puerto 80</p>
-            </div>
-            <div class="service">
-                            <h3>Servidor FTP</h3>
-                <div class="status">Activo</div>
-                <p>vsftpd para transferencia de archivos en puerto 21</p>
-            </div>
-        </div>
-        <div class="info-box">
-                        <h4>Acceso Web</h4>
-            <p>URL: <code>http://localhost</code></p>
-            <p>Puerto: <code>80</code></p>
-        </div>
-        <div class="info-box">
-                        <h4>Acceso FTP</h4>
-            <p>Servidor: <code>localhost</code></p>
-            <p>Puerto: <code>21</code></p>
-            <p>Usuario: <code>ftpuser</code></p>
-            <p>Contraseña: <code>ftppass123</code></p>
-            <p>Puertos pasivos: <code>21100-21110</code></p>
-        </div>
-        <div class="info-box">
-                        <h4>Directorios</h4>
-            <p>Web: <code>/var/www/html</code></p>
-            <p>FTP: <code>/home/ftpuser</code></p>
-        </div>
-                </section>
-
-                <section id="tab-descargas" class="tab-panel" role="tabpanel" aria-labelledby="tab-descargas-btn">
-                    <h2>Descargas</h2>
-        <div class="info-box">
-                        <p>Descarga el informe técnico en formato PDF y accede a la carpeta de descargas.</p>
+                <section id="tab-archivos" class="tab-panel" role="tabpanel" aria-labelledby="tab-archivos-btn">
+                    <h2>Subir y descargar archivos</h2>
+        <div class="grid-2">
+            <div class="card">
+                            <h3 class="section-title">Descargas</h3>
+                <p>Descarga el informe técnico en PDF o visita la carpeta de descargas del servidor web.</p>
             <div class="actions">
                 <button class="btn" id="generatePdfBtn" onclick="generateAndDownloadPDF()">Descargar Informe PDF</button>
                 <a class="btn secondary" href="/downloads/" target="_blank">Ver carpeta de descargas</a>
                 <div id="pdfStatus" style="margin-top: 10px; font-size: 0.9rem; color: #666;"></div>
             </div>
         </div>
-                </section>
-
-                <section id="tab-subir" class="tab-panel" role="tabpanel" aria-labelledby="tab-subir-btn">
-                    <h2>Subir archivos</h2>
-        <div class="info-box">
-            <form id="uploadForm">
+            <div class="card">
+                            <h3 class="section-title">Subir archivos (FTP vía backend)</h3>
+                <p>Utiliza el formulario para subir archivos al servidor a través del endpoint <code>/upload</code>.</p>
+                <form id="uploadForm" style="margin-top: 0.5rem;">
                 <input type="file" id="fileInput" name="file" required />
                 <button class="btn" type="submit">Subir</button>
                 <span id="uploadStatus"></span>
             </form>
+            </div>
                     </div>
                 </section>
+
             </div>
         </div>
 
         <footer>
-            <p>Servidor creado con Docker + Ubuntu Server + nginx + vsftpd</p>
-            <p>Sistema operativo: Ubuntu 22.04 LTS</p>
+            <p>Universidad Pedagógica y Tecnológica de Colombia</p>
+            <p>Redes de Datos</p>
         </footer>
     </div>
     <script>
@@ -593,34 +555,36 @@
             if (status) status.textContent = 'Preparando el informe técnico para descarga...';
             
             try {
-                const sourceSection = document.getElementById('informe-carrusel');
-                if (!sourceSection) throw new Error('Sección de informe no encontrada');
+                const sourceSection = document.getElementById('servicios-carrusel');
+                if (!sourceSection) throw new Error('Sección de servicios no encontrada');
 
                 const printableHtml = `<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Informe Técnico</title>
+<title>Informe Técnico - Servicios</title>
 <style>
 @page { size: A4; margin: 2cm; }
 body { font-family: 'Times New Roman', serif; color: #2d3748; line-height: 1.6; font-size: 12pt; }
 h1, h2, h3, h4, h5 { color: #1a202c; }
 code { background: #f8f9fa; border: 1pt solid #e9ecef; padding: 2pt 4pt; font-family: 'Courier New', monospace; font-size: 10pt; border-radius: 2pt; }
-.table-of-contents ul { list-style: none; padding-left: 0; }
-.table-of-contents ul ul { padding-left: 20px; list-style: circle; }
-.gantt-diagram { max-width: 100%; height: auto; display: block; margin: 1rem auto; border: 1px solid #e2e8f0; border-radius: 8px; }
 .print-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 18px 22px; border-radius: 10px; margin-bottom: 18px; }
 .print-header h1 { color: #fff; margin: 0 0 6px; font-size: 20pt; }
 .print-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 10pt; opacity: 0.95; }
 .pill { display: inline-block; background: rgba(255,255,255,0.15); color: #fff; padding: 2px 8px; border-radius: 999px; font-size: 9pt; margin-right: 6px; }
 .toolbar { display: flex; gap: 8px; margin-top: 10px; }
 .toolbar button { background: #fff; color: #4a5568; border: 0; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
-@media print { .toolbar { display: none; } }
+@media print { .toolbar { display: none; }
+.carousel { position: static !important; overflow: visible !important; }
+.carousel-track { display: block !important; transform: none !important; }
+.carousel-slide { min-width: auto !important; padding: 1rem 0 !important; border-bottom: 1pt solid #e2e8f0; margin-bottom: 1rem; }
+.carousel-nav { display: none !important; }
+}
 </style>
 </head>
 <body>
 <div class="print-header">
-  <h1>Informe ABP: Servidor DHCP, DNS y Servidor de Archivos</h1>
+  <h1>Informe Técnico: Servicios DHCP, DNS, NGINX y VSFTPD</h1>
   <div class="print-meta">
     <span>Grupo: David Santiago Lotero Rodríguez, Luis Eduardo Hernandez Rincon, Laura Vanessa Figueredo Martínez, Juan Sebastian Joe Felipe Rodriguez Mateus</span>
     <span>•</span>
@@ -707,6 +671,38 @@ ${sourceSection.innerHTML}
 
             renderDots();
             update();
+        })();
+
+        // Navegación rápida: activar pestaña Informe Técnico y mover carrusel a la sección
+        (function initQuickNav() {
+            const serviciosTabBtn = document.getElementById('tab-servicios-btn');
+            const track = document.getElementById('carouselTrack');
+            const dots = () => Array.from(document.querySelectorAll('#carouselDots .dot'));
+            if (!serviciosTabBtn || !track) return;
+
+            const anchorToIndex = new Map([
+                ['servicios-dhcp', 0],
+                ['servicios-dns', 1],
+                ['servicios-nginx', 2],
+                ['servicios-vsftpd', 3],
+            ]);
+
+            function goToSlide(i) {
+                const ds = dots();
+                if (ds[i]) ds[i].click();
+            }
+
+            function handleAnchorNav(e) {
+                const href = e.currentTarget.getAttribute('href') || '';
+                if (!href.startsWith('#')) return;
+                const id = href.replace('#', '');
+                if (!anchorToIndex.has(id)) return;
+                e.preventDefault();
+                activateTab(serviciosTabBtn);
+                requestAnimationFrame(() => goToSlide(anchorToIndex.get(id)));
+            }
+
+            // Los enlaces de navegación rápida se eliminaron junto con el héroe
         })();
     </script>
 </body>
